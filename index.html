@@ -1,0 +1,74 @@
+<!DOCTYPE  html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width,maximum-scale=1.0,minimum-scale=1.0'>
+  <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+  <title>X'mas</title>
+  <style>
+    img {
+      width: 100px;
+      height: 100px;
+    }
+    .hide { display: none; }
+  </style>
+</head>
+<body>
+  <input id='upload' type='file' onchange='viewer()'>
+  <img id='img' src='' alt='' style='opacity: 0'>
+  <canvas style='display: none' id='cvs'></canvas>
+  <img class='hide' id='hat0' src='./hat0.png' />
+  <img class='hide' id='hat1' src='./hat1.png' />
+  <img class='hide' id='hat2' src='./hat2.png' />
+  <img class='hide' id='hat3' src='./hat3.png' />
+  <img class='hide' id='hat4' src='./hat4.png' />
+  <img class='hide' id='hat5' src='./hat5.png' />
+  <img class='hide' id='hat6' src='./hat6.png' />
+  <img class='hide' id='hat7' src='./hat7.png' />
+  <img class='hide' id='hat8' src='./hat8.png' />
+  <img class='hide' id='hat9' src='./hat9.png' />
+  <img id='export' alt='圣诞快乐' src='' />
+  <button onClick='changeHat()'>hat</button>
+<script>
+  var cvs = document.getElementById('cvs')
+  var ctx = cvs.getContext('2d')
+  var hat = 'hat6'
+
+  function viewer () {
+    var img = document.getElementById('img')
+    var file = document.getElementById('upload').files[0]
+    var reader = new FileReader()
+
+    if (file) {
+      reader.readAsDataURL(file)
+      reader.onload = function (e) {
+        img.src = reader.result
+        img.onload = function () {
+          img2Cvs(img)
+        }
+      }
+    } else {
+      img.src = ''
+    }
+  }
+
+  function img2Cvs (img) {
+    cvs.width = img.width
+    cvs.height = img.height
+    ctx.drawImage(img, 0 ,0, img.width, img.height)
+    changeHat()
+  }
+
+  function changeHat () {
+    var hats = document.getElementsByClassName('hide')
+    var exportImage = document.getElementById('export')
+    hat = 'hat' + (+hat.replace('hat', '') + 1) % hats.length
+    var hatImage = document.getElementById(hat)
+    ctx.clearRect(0, 0, img.width, img.height)
+    ctx.drawImage(img, 0 ,0, img.width, img.height)
+    ctx.drawImage(hatImage, img.width / 4, 0, img.width / 2, img.height / 2.5)
+    exportImage.src = cvs.toDataURL('image/png')
+  }
+</script>
+</body>
+</html>

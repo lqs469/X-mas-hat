@@ -7,16 +7,27 @@
   <title>X'mas</title>
   <style>
     body {
-      font-size: 30px;
+      font-size: 28px;
       text-align: center;
     }
-    label {position: fixed; top: 0; left: 0; font-size: 10px;}
+    label {
+      position: fixed;
+      top: 0;
+      left: 0;
+      font-size: 10px;
+    }
+    .header {
+      color: #108757;
+      height: 5rem;
+    }
     img {
       width: 12rem;
       height: 12rem;
     }
-    .hide { display: none; }
-    .input-upload {
+    .hide {
+      display: none;
+    }
+    .body {
       margin: 4rem auto 3rem;
       height: 10rem;
       width: 10rem;
@@ -25,40 +36,54 @@
       line-height: 10rem;
       position: relative;
     }
+    #export {
+      display: none;
+      margin: -1rem -1rem;
+    }
+    .footer {
+
+    }
     button {
-      font-size: 30px;
+      font-size: 25px;
       color: #fff;
       width: 15rem;
-      height: 5rem;
-      background: #ff404a;
+      height: 4rem;
+      background: #8fd16f;
       border: 0;
       border-radius: 1rem;
     }
   </style>
 </head>
 <body>
-  <h2>Happy X'mas</h2>
-  <label>beta版</label>
-  <div class='input-upload'>
-    <small>点击上传头像</small>
-    <input id='upload' type='file' onchange='viewer()' style='height: 10rem; width: 10rem; position: absolute; top: 0; left: 0; opacity: 0'>
+
+
+  <div class='header'>
+    <h2>Happy X'mas</h2>
   </div>
-  <img id='export' alt='圣诞快乐' src='' style='position: fixed; top: -100%;' />
-  <img id='img' src='' alt='' style='z-index: -1; position: fixed; opacity: 0'>
-  <p id='tip' style='opacity: 0'>长按图片保存或分享</p>
-  <canvas style='display: none' id='cvs'></canvas>
-  <img class='hide' id='hat0' src='./hat0.png' />
-  <img class='hide' id='hat1' src='./hat1.png' />
-  <img class='hide' id='hat2' src='./hat2.png' />
-  <img class='hide' id='hat3' src='./hat3.png' />
-  <img class='hide' id='hat4' src='./hat4.png' />
-  <img class='hide' id='hat5' src='./hat5.png' />
-  <img class='hide' id='hat6' src='./hat6.png' />
-  <img class='hide' id='hat7' src='./hat7.png' />
-  <img class='hide' id='hat8' src='./hat8.png' />
-  <img class='hide' id='hat9' src='./hat9.png' />
-  <div>
-    <button onClick='changeHat()'>换 一 顶</button>
+  <div class='body'>
+    <small id='uploadText'>点击上传头像</small>
+    <input id='upload' type='file' onchange='viewer()' style='height: 10rem; width: 10rem; position: absolute; top: 0; left: 0; opacity: 0'>
+    <img id='export' alt='圣诞快乐' src='' style='' />
+  </div>
+  <div class='footer'>
+    <p id='tip' style='opacity: 0'>长按图片保存或分享</p>
+    <button id='change' onClick='changeHat()' style='display: none; margin: auto'>换 一 顶</button>
+  </div>
+
+  <label>beta版</label>
+  <div class='hide'>
+    <img id='img' src='' alt=''>
+    <canvas id='cvs'></canvas>
+    <img class='hide' id='hat0' src='./hat0.png' />
+    <img class='hide' id='hat1' src='./hat1.png' />
+    <img class='hide' id='hat2' src='./hat2.png' />
+    <img class='hide' id='hat3' src='./hat3.png' />
+    <img class='hide' id='hat4' src='./hat4.png' />
+    <img class='hide' id='hat5' src='./hat5.png' />
+    <img class='hide' id='hat6' src='./hat6.png' />
+    <img class='hide' id='hat7' src='./hat7.png' />
+    <img class='hide' id='hat8' src='./hat8.png' />
+    <img class='hide' id='hat9' src='./hat9.png' />
   </div>
 <script>
   var cvs = document.getElementById('cvs')
@@ -89,12 +114,11 @@
     ctx.drawImage(img, 0 ,0, img.width, img.height)
     changeHat()
 
-    var exportImage = document.getElementById('export')
-    exportImage.style.top = '9rem'
-    exportImage.style.left = '50%'
-    exportImage.style.transform = 'translate(-50%)'
-    exportImage.style.zIndex = '10'
+    document.getElementById('uploadText').style.display = 'none'
     document.getElementById('tip').style.opacity = 1
+    document.getElementById('upload').style.display = 'none'
+    document.getElementById('export').style.display = 'block'
+    document.getElementById('change').style.display = 'block'
   }
 
   function changeHat () {

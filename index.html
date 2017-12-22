@@ -4,7 +4,7 @@
   <meta charset='UTF-8'>
   <meta name='viewport' content='width=device-width,maximum-scale=1.0,minimum-scale=1.0'>
   <meta http-equiv='X-UA-Compatible' content='ie=edge'>
-  <title>X'mas</title>
+  <title>今年圣诞不收礼, 只送一顶帽子</title>
   <style>
     body {
       font-size: 28px;
@@ -12,7 +12,7 @@
     }
     label {
       position: fixed;
-      top: 0;
+      bottom: 0;
       left: 0;
       font-size: 10px;
     }
@@ -20,11 +20,11 @@
       color: #108757;
       height: 5rem;
     }
-    img {
-      width: 12rem;
-      height: 12rem;
+    #cvs {
+      display: none;
+      margin: -1rem -1rem;
     }
-    .hide {
+    .hide, #exportBtn {
       display: none;
     }
     .body {
@@ -32,6 +32,7 @@
       height: 10rem;
       width: 10rem;
       border: solid 1px #aaa;
+      box-shadow: 0 0 5px #aaa;
       border-radius: 1rem;
       line-height: 10rem;
       position: relative;
@@ -39,6 +40,8 @@
     #export {
       display: none;
       margin: -1rem -1rem;
+      width: 200px;
+      height: 200px;
     }
     .footer {
 
@@ -51,29 +54,30 @@
       background: #8fd16f;
       border: 0;
       border-radius: 1rem;
+      margin: 0 auto 20px;
     }
   </style>
 </head>
 <body>
-
-
   <div class='header'>
     <h2>Happy X'mas</h2>
   </div>
   <div class='body'>
-    <small id='uploadText'>点击上传头像</small>
+    <small id='uploadText'>上传头像</small>
     <input id='upload' type='file' onchange='viewer()' style='height: 10rem; width: 10rem; position: absolute; top: 0; left: 0; opacity: 0'>
-    <img id='export' alt='圣诞快乐' src='' style='' />
+    <img id='export' alt='圣诞快乐' src='' />
+    <canvas id='cvs'></canvas>
   </div>
   <div class='footer'>
-    <p id='tip' style='opacity: 0'>长按图片保存或分享</p>
-    <button id='change' onClick='changeHat()' style='display: none; margin: auto'>换 一 顶</button>
+    <p id='tip' style='opacity: 0'>点击帽子调整位置和大小</p>
+    <button id='change' onClick='changeHat()' style='display: none;'>换 一 顶</button>
+    <button id='exportBtn' onClick='exportFunc()'>生成头像</button>
+    <!-- <a onClick='reUpload()'>重来</a> -->
   </div>
 
-  <label>beta版</label>
-  <div class='hide'>
-    <img id='img' src='' alt=''>
-    <canvas id='cvs'></canvas>
+  <label>beta2.0版 -- 💻  with ❤️  by <a href='https://github.com/lqs469/X-mas-hat'>lqs469</a></label>
+  <div style='display: none'>
+    <img id='img' src='' alt='' />
     <img class='hide' id='hat0' src='./hat0.png' />
     <img class='hide' id='hat1' src='./hat1.png' />
     <img class='hide' id='hat2' src='./hat2.png' />
@@ -85,14 +89,20 @@
     <img class='hide' id='hat8' src='./hat8.png' />
     <img class='hide' id='hat9' src='./hat9.png' />
   </div>
+
+<script src="https://cdn.bootcss.com/fabric.js/2.0.0-rc.3/fabric.min.js"></script>
 <script>
   var cvs = document.getElementById('cvs')
   var ctx = cvs.getContext('2d')
+  var exportImage = document.getElementById('export')
+  var img = document.getElementById('img')
   var hat = 'hat6'
+  var canvasFabric
+  var hatInstance
 
   function viewer () {
-    var img = document.getElementById('img')
     var file = document.getElementById('upload').files[0]
+    console.log(file)
     var reader = new FileReader()
 
     if (file) {
@@ -111,26 +121,67 @@
   function img2Cvs (img) {
     cvs.width = img.width
     cvs.height = img.height
-    ctx.drawImage(img, 0 ,0, img.width, img.height)
+    cvs.style.display = 'block'
+    canvasFabric = new fabric.Canvas('cvs', {
+      width: 200,
+      height: 200,
+      backgroundImage: new fabric.Image(img, {
+        scaleX: 200 / img.width,
+        scaleY: 200 / img.height
+      })
+    })
     changeHat()
 
     document.getElementById('uploadText').style.display = 'none'
-    document.getElementById('tip').style.opacity = 1
     document.getElementById('upload').style.display = 'none'
-    document.getElementById('export').style.display = 'block'
     document.getElementById('change').style.display = 'block'
+    document.getElementById('exportBtn').style.display = 'block'
+    document.getElementById('tip').style.opacity = 1
   }
 
   function changeHat () {
+    document.getElementById(hat).style.display = 'none'
     var hats = document.getElementsByClassName('hide')
-    var exportImage = document.getElementById('export')
     hat = 'hat' + (+hat.replace('hat', '') + 1) % hats.length
     var hatImage = document.getElementById(hat)
-    ctx.clearRect(0, 0, img.width, img.height)
-    ctx.drawImage(img, 0 ,0, img.width, img.height)
-    ctx.drawImage(hatImage, img.width / 4, 0, img.width / 2, img.height / 2.5)
-    exportImage.src = cvs.toDataURL('image/png')
+    hatImage.style.display = 'block'
+    if (hatInstance) {
+      canvasFabric.remove(hatInstance)
+    }
+
+    hatInstance = new fabric.Image(hatImage, {
+      top: 0,
+      left: 40,
+      scaleX: 80 / hatImage.width,
+      scaleY: 80 / hatImage.height,
+      cornerColor: '#0b3a42',
+      cornerStrokeColor: '#fff',
+      cornerStyle: 'circle',
+      transparentCorners: false,
+      rotatingPointOffset: 30
+    })
+    canvasFabric.add(hatInstance)
   }
+
+  function exportFunc () {
+    document.getElementById('exportBtn').style.display = 'none'
+    document.getElementById('tip').innerHTML = '长按图片保存或分享'
+    document.getElementById('change').style.display = 'none'
+    cvs.style.display = 'none'
+    exportImage.style.display = 'block'
+    exportImage.src = canvasFabric.toDataURL({ width: 200, height: 200 })
+  }
+
+  // function reUpload () {
+  //   ctx.clearRect(0, 0, img.width, img.height)
+  //   exportImage.src = ''
+  //   img.src = ''
+  //   document.getElementById('uploadText').style.display = 'block'
+  //   document.getElementById('tip').style.opacity = 0
+  //   document.getElementById('upload').style.display = 'block'
+  //   exportImage.style.display = 'none'
+  //   document.getElementById('change').style.display = 'none'
+  // }
 </script>
 </body>
 </html>

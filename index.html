@@ -7,8 +7,9 @@
   <title>今年圣诞不收礼, 只送一顶帽子</title>
   <style>
     body {
-      font-size: 28px;
+      font-size: 20px;
       text-align: center;
+      margin: 0;
     }
     label {
       position: fixed;
@@ -18,11 +19,14 @@
     }
     .header {
       color: #108757;
-      height: 5rem;
+      height: 3rem;
     }
     #cvs {
       display: none;
-      margin: -1rem -1rem;
+      margin: 0 auto;
+    }
+    .canvas-container {
+      margin: 0 auto;
     }
     .hide, #exportBtn {
       display: none;
@@ -39,43 +43,43 @@
     }
     #export {
       display: none;
-      margin: -1rem -1rem;
-      width: 200px;
-      height: 200px;
+      margin: 0 auto;
+      width: 250px;
+      height: 250px;
     }
     .footer {
-
+      display: flex;
+      justify-content: space-around;
     }
     button {
-      font-size: 25px;
+      font-size: 18px;
       color: #fff;
-      width: 15rem;
-      height: 4rem;
+      padding: 0 30px;
+      height: 2.3rem;
       background: #8fd16f;
       border: 0;
-      border-radius: 1rem;
-      margin: 0 auto 20px;
+      border-radius: 20px;
     }
   </style>
 </head>
 <body>
   <div class='header'>
-    <h2>Happy X'mas</h2>
+    <h2>Marry X'mas</h2>
   </div>
-  <div class='body'>
+  <div class='body' id='uploadContainer'>
     <small id='uploadText'>上传头像</small>
     <input id='upload' type='file' onchange='viewer()' style='height: 10rem; width: 10rem; position: absolute; top: 0; left: 0; opacity: 0'>
-    <img id='export' alt='圣诞快乐' src='' />
-    <canvas id='cvs'></canvas>
   </div>
+  <img id='export' alt='圣诞快乐' src='' />
+  <canvas id='cvs'></canvas>
+  <p id='tip' style='opacity: 0'>点击帽子调整位置和大小</p>
   <div class='footer'>
-    <p id='tip' style='opacity: 0'>点击帽子调整位置和大小</p>
     <button id='change' onClick='changeHat()' style='display: none;'>换 一 顶</button>
     <button id='exportBtn' onClick='exportFunc()'>生成头像</button>
     <!-- <a onClick='reUpload()'>重来</a> -->
   </div>
 
-  <label>beta2.0版 -- 💻  with ❤️  by <a href='https://github.com/lqs469/X-mas-hat'>lqs469</a></label>
+  <label> 💻  with ❤️  by <a href='https://github.com/lqs469/X-mas-hat'>lqs469</a></label>
   <div style='display: none'>
     <img id='img' src='' alt='' />
     <img class='hide' id='hat0' src='./hat0.png' />
@@ -99,6 +103,8 @@
   var hat = 'hat6'
   var canvasFabric
   var hatInstance
+  var screenWidth = window.screen.width < 500 ? window.screen.width : 300
+  console.log(window.screen.width)
 
   function viewer () {
     var file = document.getElementById('upload').files[0]
@@ -123,15 +129,16 @@
     cvs.height = img.height
     cvs.style.display = 'block'
     canvasFabric = new fabric.Canvas('cvs', {
-      width: 200,
-      height: 200,
+      width: screenWidth,
+      height: screenWidth,
       backgroundImage: new fabric.Image(img, {
-        scaleX: 200 / img.width,
-        scaleY: 200 / img.height
+        scaleX: screenWidth / img.width,
+        scaleY: screenWidth / img.height
       })
     })
     changeHat()
 
+    document.getElementById('uploadContainer').style.display = 'none'
     document.getElementById('uploadText').style.display = 'none'
     document.getElementById('upload').style.display = 'none'
     document.getElementById('change').style.display = 'block'
@@ -150,26 +157,31 @@
     }
 
     hatInstance = new fabric.Image(hatImage, {
-      top: 0,
-      left: 40,
-      scaleX: 80 / hatImage.width,
-      scaleY: 80 / hatImage.height,
+      top: 40,
+      left: screenWidth / 3,
+      scaleX: 100 / hatImage.width,
+      scaleY: 100 / hatImage.height,
       cornerColor: '#0b3a42',
       cornerStrokeColor: '#fff',
       cornerStyle: 'circle',
       transparentCorners: false,
-      rotatingPointOffset: 30
+      rotatingPointOffset: 30,
     })
+    hatInstance.setControlVisible('ml', false)
+    hatInstance.setControlVisible('mr', false)
+    hatInstance.setControlVisible('mt', false)
+    hatInstance.setControlVisible('mb', false)
     canvasFabric.add(hatInstance)
   }
 
   function exportFunc () {
+    document.getElementsByClassName('canvas-container')[0].style.display = 'none'
     document.getElementById('exportBtn').style.display = 'none'
     document.getElementById('tip').innerHTML = '长按图片保存或分享'
     document.getElementById('change').style.display = 'none'
     cvs.style.display = 'none'
     exportImage.style.display = 'block'
-    exportImage.src = canvasFabric.toDataURL({ width: 200, height: 200 })
+    exportImage.src = canvasFabric.toDataURL({ width: screenWidth, height: screenWidth })
   }
 
   // function reUpload () {

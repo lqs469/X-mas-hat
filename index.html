@@ -14,15 +14,18 @@
   <div class='header'>
     <h2>🎄🎅🏻🎄</h2>
   </div>
+
   <div class='upload-container' id='uploadContainer'>
     <small id='uploadText'>🎁</small>
-    <input id='upload' class='upload-input' type='file' onchange='onUpload()'>
+    <input id='upload' class='upload-input' type='file'>
   </div>
+
   <img id='export' alt='圣诞快乐' src='' />
   <canvas id='cvs'></canvas>
-  <p id='tip' style='opacity: 0'>点击帽子调整位置和大小</p>
 
-  <div id='hatsContainer' class='hats-container' onClick='onClickHat()'>
+  <p id='tip' />
+
+  <div id='hatsContainer' class='hats-container'>
     <img class='hat-item' id='hat0' src='./hat0.png' />
     <img class='hat-item' id='hat1' src='./hat1.png' />
     <img class='hat-item' id='hat2' src='./hat2.png' />
@@ -34,15 +37,15 @@
     <img class='hat-item' id='hat8' src='./hat8.png' />
     <img class='hat-item' id='hat9' src='./hat9.png' />
   </div>
-
-  <div class='footer'>
-    <button id='changeHat' onClick='getHat()' style='display: none;'>换 一 顶</button>
-    <button id='exportBtn' onClick='exportFunc()'>生成头像</button>
-    <!-- <a onClick='reUpload()'>重来</a> -->
+  <div class='footer hide' id='footer'>
+    <button id='addHat'>加一顶</button>
+    <button id='reuploadImg'>重新上传</button>
+    <button id='exportBtn'>生成头像</button>
+    <button class='hide' id='delete' >删除</button>
   </div>
 
   <label> 💻  with ❤️  by <a href='https://github.com/lqs469/X-mas-hat'>lqs469</a></label>
-  <img id='img' src='' alt='' />
+  <!-- <img id='img' src='' alt='' /> -->
   <script src='./main.js'></script>
 </body>
 </html>

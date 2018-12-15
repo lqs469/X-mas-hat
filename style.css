@@ -17,7 +17,6 @@ label {
 }
 
 #cvs {
-    /* display: none; */
     margin: 0 auto;
 }
 
@@ -25,8 +24,7 @@ label {
     margin: 0 auto;
 }
 
-.hide,
-#exportBtn {
+.hide {
     display: none;
 }
 
@@ -50,35 +48,34 @@ label {
 }
 
 .hats-container {
-    height: 100px;
-    display: none;
+    height: 50px;
+    margin: 10px 0;
     justify-content: flex-start;
     align-items: center;
     overflow: auto;
 }
 
 .hat-item {
-    /* width: 100px; */
+    /* width: 30px; */
 }
 
 #export {
     display: none;
     margin: 0 auto;
-    width: 250px;
-    height: 250px;
 }
 
 .footer {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    margin-bottom: 50px;
 }
 
 button {
-    font-size: 18px;
+    /* font-size: 18px;
     color: #fff;
     padding: 0 30px;
     height: 2.3rem;
     background: #8fd16f;
     border: 0;
-    border-radius: 20px;
+    border-radius: 20px; */
 }

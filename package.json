@@ -1,0 +1,20 @@
+{
+  "name": "santa-cap",
+  "description": "[Have Fun.](https://lqs469.github.io/X-mas-hat/index_en.html)",
+  "version": "1.0.0",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lqs469/X-mas-hat.git"
+  },
+  "keywords": [
+    "santa",
+    "cap"
+  ],
+  "author": "lqs469",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lqs469/X-mas-hat/issues"
+  },
+  "homepage": "https://github.com/lqs469/X-mas-hat#readme",
+}

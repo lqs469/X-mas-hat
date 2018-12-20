@@ -173,32 +173,44 @@ class Img {
         this.canvasFabric.requestRenderAll();
     }
 
-    addHat() {
+    addHat(clickHat) {
         const { width, height, defaultHatImg } = this;
-        const hat = new Hat(defaultHatImg, height / 2 - 25, width / 2 - 25, 1);
+        const hat = new Hat(
+            clickHat || defaultHatImg,
+            height / 2 - 25,
+            width / 2 - 25,
+            1
+        );
+
         if (hat) {
             this.canvasFabric.add(hat);
             this.canvasFabric.setActiveObject(hat);
             this.activeHat = hat;
+            $('delete').style.display = 'block';
         }
     }
 
     changeHat(hatImage) {
         if (!this.activeHat) {
             // TODO
-            const all = this.canvasFabric.getObjects();
-            all.forEach(hat => {
-                hat.setElement(hatImage);
-            });
-            this.canvasFabric.requestRenderAll();
+            // const all = this.canvasFabric.getObjects();
+            // if (all.length > 0) {
+            //     all.forEach(hat => {
+            //         hat.setElement(hatImage);
+            //     });
+            // } else {
+            // }
+            this.addHat(hatImage);
         } else {
             this.activeHat.setElement(hatImage);
-            this.canvasFabric.requestRenderAll();
         }
+        this.canvasFabric.requestRenderAll();
     }
 
     removeHat(hat) {
         hat && this.canvasFabric.remove(hat);
+        $('delete').style.display = 'none';
+        this.activeHat = null;
     }
 
     export() {
@@ -223,9 +235,9 @@ class Img {
     setStep(step) {
         switch (step) {
             case 1:
+                $('header').style.display = 'flex';
                 $('hatsContainer').style.display = 'none';
-                $('uploadContainer').style.display = 'block';
-                $('uploadText').style.display = 'block';
+                $('uploadContainer').style.display = 'flex';
                 $('upload').style.display = 'block';
                 $('footer').style.display = 'none';
                 $('export').style.display = 'none';
@@ -234,22 +246,22 @@ class Img {
                 this.tip('');
                 break;
             case 2:
-                $('hatsContainer').style.display = 'block';
+                $('header').style.display = 'none';
+                $('hatsContainer').style.display = 'flex';
                 $('uploadContainer').style.display = 'none';
-                $('uploadText').style.display = 'none';
                 $('upload').style.display = 'none';
                 $('footer').style.display = 'flex';
-                $('addHat').style.display = 'block';
+                // $('addHat').style.display = 'block';
                 $('export').style.display = 'none';
                 $('exportBtn').style.display = 'block';
                 this.cvs.style.display = 'block';
-                this.tip('点击帽子调整位置和大小');
+                this.tip('');
                 break;
             case 3:
                 $('delete').style.display = 'none';
                 $('hatsContainer').style.display = 'none';
                 $('exportBtn').style.display = 'none';
-                $('addHat').style.display = 'none';
+                // $('addHat').style.display = 'none';
                 this.tip('长按图片保存或分享');
                 this.cvs.style.display = 'none';
                 this.exportImageContainer.style.display = 'block';
@@ -313,9 +325,9 @@ $('upload').addEventListener('change', () => {
     };
 });
 
-$('addHat').addEventListener('click', () => {
-    img.addHat();
-});
+// $('addHat').addEventListener('click', () => {
+//     img.addHat();
+// });
 
 $('delete').addEventListener('click', () => {
     img.removeHat(img.activeHat);
@@ -333,7 +345,7 @@ let facefinder_classify_region = (r, c, s, pixels, ldim) => -1.0;
 
 // const cascadeurl =
 //     'https://raw.githubusercontent.com/nenadmarkus/pico/c2e81f9d23cc11d1a612fd21e4f9de0921a5d0d9/rnt/cascades/facefinder';
-const cascadeurl = './facefinder';
+const cascadeurl = '../lib/facefinder';
 
 fetch(cascadeurl).then(response => {
     response.arrayBuffer().then(buffer => {

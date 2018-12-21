@@ -9,6 +9,21 @@ body {
     background: #f4f4f4;
 }
 
+#overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  animation: fade 3000ms infinite;
+  -webkit-animation: fade 3000ms infinite;
+}
+
 .header {
     display: flex;
     justify-content: center;
@@ -134,4 +149,5 @@ button {
     left: 0;
     right: 0;
     font-size: 8px;
+    z-index: 101;
 }

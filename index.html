@@ -49,5 +49,14 @@
 
   <label class='bottom'> 💻  with ❤️  by <a href='https://github.com/lqs469/X-mas-hat'>lqs469</a></label>
   <script src='./dist/main.min.js'></script>
+
+  <div id='overlay'>Loading...</div>
+  <script>
+  document.onreadystatechange = function () {
+    if (document.readyState === 'complete') {
+      $('overlay').style.display = 'none'
+    }
+  }
+  </script>
 </body>
 </html>

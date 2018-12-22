@@ -351,7 +351,15 @@ fetch(cascadeurl).then(response => {
   });
 });
 
-// document.onreadystatechange = function() {
-//   if (document.readyState === 'complete') {
-//   }
-// };
+document.onreadystatechange = function() {
+  if (document.readyState === 'complete') {
+    const hatsContainer = $('hatsContainer')
+    for(let i = 20; i >= 0; i--) {
+      let img = document.createElement('img');
+      img.src = `img/hat${i}.png`;
+      img.id = `hat${i}`;
+      img.class = 'hat-item';
+      hatsContainer.appendChild(img);
+    }
+  }
+};

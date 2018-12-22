@@ -348,12 +348,12 @@ fetch(cascadeurl).then(response => {
     const bytes = new Int8Array(buffer);
     facefinder_classify_region = pico.unpack_cascade(bytes);
     console.log('* cascade loaded');
+    $('overlay').style.display = 'none';
   });
 });
 
 document.onreadystatechange = function() {
   if (document.readyState === 'complete') {
-    $('overlay').style.display = 'none';
     $('cnzz_stat_icon_1275757193').style.display = 'none';
   }
 };

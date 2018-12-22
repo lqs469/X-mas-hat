@@ -341,8 +341,7 @@ let facefinder_classify_region = (r, c, s, pixels, ldim) => -1.0;
 
 // const cascadeurl =
 //     'https://raw.githubusercontent.com/nenadmarkus/pico/c2e81f9d23cc11d1a612fd21e4f9de0921a5d0d9/rnt/cascades/facefinder';
-const cascadeurl =
-  'https://coding.net/u/lqs469/p/santa-cap/git/raw/master/lib/facefinder';
+const cascadeurl = '//lqs469.coding.me/santa-cap/lib/facefinder';
 
 fetch(cascadeurl).then(response => {
   response.arrayBuffer().then(buffer => {
@@ -355,7 +354,6 @@ fetch(cascadeurl).then(response => {
 document.onreadystatechange = function() {
   if (document.readyState === 'complete') {
     $('overlay').style.display = 'none';
+    $('cnzz_stat_icon_1275757193').style.display = 'none';
   }
 };
-
-$('cnzz_stat_icon_1275757193').style.display = 'none';

@@ -10,7 +10,6 @@ class Img {
     this.cvs = $('cvs');
     this.ctx = this.cvs.getContext('2d');
     this.canvasFabric = null;
-    this.defaultHatImg = $('hat6');
     this.detectResult = [];
     this.activeHat = null;
     this.exportImageContainer = $('export');
@@ -127,7 +126,7 @@ class Img {
   }
 
   convertImg2Cvs(image) {
-    const { width, height, defaultHatImg, detectResult } = this;
+    const { width, height, detectResult } = this;
     this.canvasFabric && this.canvasFabric.dispose();
 
     const { naturalWidth, naturalHeight } = image;
@@ -157,7 +156,9 @@ class Img {
       this.calcOffset();
     });
 
+    const hatLength = $('hatsContainer').children.length;
     detectResult.forEach(det => {
+      const defaultHatImg = $(`hat${Math.floor(Math.random() * hatLength)}`);
       const factor = det[2] / defaultHatImg.width;
       const top = det[0] - defaultHatImg.height * factor;
       const left = det[1] - (defaultHatImg.width * factor) / 2;
@@ -170,9 +171,9 @@ class Img {
   }
 
   addHat(clickHat) {
-    const { width, height, defaultHatImg } = this;
+    const { width, height } = this;
     const hat = new Hat(
-      clickHat || defaultHatImg,
+      clickHat,
       height / 2 - 25,
       width / 2 - 25,
       1
@@ -339,10 +340,7 @@ $('exportBtn').addEventListener('click', () => {
 
 let facefinder_classify_region = (r, c, s, pixels, ldim) => -1.0;
 
-// const cascadeurl =
-//     'https://raw.githubusercontent.com/nenadmarkus/pico/c2e81f9d23cc11d1a612fd21e4f9de0921a5d0d9/rnt/cascades/facefinder';
 const cascadeurl = 'lib/facefinder.js';
-// const cascadeurl = '//lqs469.coding.me/santa-cap/lib/facefinder.js';
 
 fetch(cascadeurl).then(response => {
   response.arrayBuffer().then(buffer => {

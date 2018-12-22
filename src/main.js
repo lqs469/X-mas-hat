@@ -345,7 +345,7 @@ let facefinder_classify_region = (r, c, s, pixels, ldim) => -1.0;
 
 // const cascadeurl =
 //     'https://raw.githubusercontent.com/nenadmarkus/pico/c2e81f9d23cc11d1a612fd21e4f9de0921a5d0d9/rnt/cascades/facefinder';
-const cascadeurl = '../lib/facefinder';
+const cascadeurl = 'https://coding.net/u/lqs469/p/santa-cap/git/raw/master/lib/facefinder';
 
 fetch(cascadeurl).then(response => {
     response.arrayBuffer().then(buffer => {

@@ -5,7 +5,7 @@
 
 [Have Fun.](https://lqs469.github.io/X-mas-hat/index.html)
 Or
-[Surge Addr](santa-hat.surge.sh)
+[Surge Addr](http://santa-hat.surge.sh)
 
 ![](https://lqs469.github.io/X-mas-hat/demo.png)
 

@@ -1,11 +1,10 @@
 # Santa Cap
 
-- Face detect. Automatically put on a cap.
-- Could add multiple hats
+Put on a santa cap automatically by face detection.🎅🤶
 
-[Have Fun.](https://lqs469.github.io/X-mas-hat/index.html)
+[Have Fun](https://lqs469.github.io/X-mas-hat/index.html)
 Or
-[Surge Addr](http://santa-hat.surge.sh)
+[Surge](http://santa-hat.surge.sh)
 
 ![](https://lqs469.github.io/X-mas-hat/demo.png)
 

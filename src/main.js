@@ -7,14 +7,14 @@ document.onreadystatechange = async function() {
     for(let i = 20; i >= 0; i--) {
       let img = document.createElement('img');
       const source = require(`./img/hat${i}.png`).default;
-      img.src = `dist/${source}`;
+      img.src = `./${source}`;
       img.id = `hat${i}`;
       img.class = 'hat-item';
       hatsContainer.appendChild(img);
     }
   }
 
-  await faceapi.nets.ssdMobilenetv1.loadFromUri('/weights');
+  await faceapi.nets.ssdMobilenetv1.loadFromUri('./weights');
   $('overlay').style.display = 'none';
 
   console.log(faceapi.nets.ssdMobilenetv1);

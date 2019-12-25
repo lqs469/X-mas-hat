@@ -1,0 +1,41 @@
+<!DOCTYPE  html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width,maximum-scale=1.0,minimum-scale=1.0'>
+  <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+  <title>🎄SantaHat🎄</title>
+  <meta name="description" content="Santa Hat by face detection,通过人脸识别戴上圣诞帽">
+  <script src="https://cdn.bootcss.com/fabric.js/2.0.0-rc.3/fabric.min.js"></script>
+</head>
+<body>
+  <div id='header' class='header'>
+    <h1>🎄Santa Hat🎄</h1>
+  </div>
+
+  <div class='upload-container' id='uploadContainer'>
+    <input id='upload' class='upload-input' type='file'>
+    <div class='santa'>Upload<br />上传图片</div>
+  </div>
+  
+  <img id='export' alt='圣诞快乐' src=''></img>
+  <canvas id='cvs'></canvas>
+
+  <p id='tip'></p>
+
+  <div id='hatsContainer' class='hats-container'></div>
+
+  <div class='footer hide' id='footer'>
+    <button id='exportBtn' style=''>导出 Export</button>
+    <button id='reuploadImg'>重选 Reload</button>
+    <button class='hide' id='delete' style='color: #ff404a; border-color: #ff404a'>删除 Remove</button>
+  </div>
+
+  
+  <label class='bottom'> 💻  with ❤️  by <a href='https://github.com/lqs469/X-mas-hat'>lqs469</a></label>
+  <div id='overlay'>Loading...</div>
+  
+  <script src='./bundle.js'></script>
+  <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1264607064'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1264607064%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
+</body>
+</html>

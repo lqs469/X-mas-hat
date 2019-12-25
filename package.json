@@ -28,6 +28,6 @@
   },
   "scripts": {
     "build": "webpack",
-    "docs": "webpack && cp -r public docs"
+    "docs": "webpack && rm -rf docs && cp -r public docs"
   }
 }

@@ -42,7 +42,7 @@ module.exports = {
         from: 'weights',
         to: 'weights',
       },
-    ])
+    ]),
   ],
   // devtool: 'inline-source-map',
 };

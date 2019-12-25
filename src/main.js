@@ -39,7 +39,7 @@ class Img {
 
   vaildExtension(file) {
     const validFileExtensions = ['.jpg', '.jpeg', '.bmp', '.gif', '.png'];
-    const fileName = file.name;
+    const fileName = file.name.toString().toLowerCase();
 
     return new RegExp(
       `(${validFileExtensions.join('|').replace(/\./g, '\\.')})$`
@@ -98,76 +98,14 @@ class Img {
     return gray;
   }
 
-  convertImg2Cvs() {
-    const { cvs, image, width, height, detectResult } = this;
-    this.canvasFabric && this.canvasFabric.dispose();
-
-    const { naturalWidth, naturalHeight } = image;
-    this.canvasFabric = new fabric.Canvas(cvs, {
-      width,
-      height,
-      backgroundImage: new fabric.Image(image, {
-        width: naturalWidth,
-        height: naturalHeight,
-        scaleX: width / naturalWidth,
-        scaleY: height / naturalHeight,
-      }),
-    });
-
-    this.canvasFabric.on('mouse:down', e => {
-      if (e.target) {
-        this.activeHat = this.canvasFabric.getActiveObject();
-        $('delete').style.display = 'block';
-      } else {
-        this.activeHat = null;
-        $('delete').style.display = 'none';
-      }
-    });
-
-    this.canvasFabric.on('after:render', function() {
-      console.log('rendered');
-      // this.calcOffset();
-    });
-
-    
-    this.canvasFabric.requestRenderAll();
-
-    // faceapi.matchDimensions(cvs, image);
-    // faceapi.draw.drawDetections(
-    //   cvs,
-    //   faceapi.resizeResults(detectResult, image),
-    // );
-
-    const resizeResults = faceapi.resizeResults(detectResult, image)
-    
-    const hatLength = $('hatsContainer').children.length;
-    resizeResults.forEach(({box}) => {
-      const defaultHatImg = $(`hat${Math.floor(Math.random() * hatLength)}`);
-      const { top, left, width, height } = box;
-      const factorX = (width + 20) / defaultHatImg.width;
-      const factorY = height / defaultHatImg.height;
-      console.log(box);
-
-      const hat = new Hat(
-        defaultHatImg,
-        top - height * 0.75,
-        left - 10,
-        width + 20,
-        height,
-        factorX,
-        factorY,
-      );
-
-      this.canvasFabric.add(hat);
-    });
-  }
-
   addHat(clickHat) {
     const { width, height } = this;
     const hat = new Hat(
       clickHat,
       height / 2 - 25,
       width / 2 - 25,
+      clickHat.naturalWidth,
+      clickHat.naturalHeight,
     );
 
     if (hat) {
@@ -257,38 +195,97 @@ class Img {
       default:
     }
   }
+
+  convertImg2Cvs() {
+    const { cvs, image, width, height, detectResult } = this;
+    this.canvasFabric && this.canvasFabric.dispose();
+
+    const { naturalWidth, naturalHeight } = image;
+    this.canvasFabric = new fabric.Canvas(cvs, {
+      width,
+      height,
+      backgroundImage: new fabric.Image(image, {
+        width: naturalWidth,
+        height: naturalHeight,
+        scaleX: width / naturalWidth,
+        scaleY: height / naturalHeight,
+      }),
+    });
+
+    this.canvasFabric.on('mouse:down', e => {
+      if (e.target) {
+        this.activeHat = this.canvasFabric.getActiveObject();
+        $('delete').style.display = 'block';
+      } else {
+        this.activeHat = null;
+        $('delete').style.display = 'none';
+      }
+    });
+
+    this.canvasFabric.on('after:render', function() {
+      console.log('rendered');
+      // this.calcOffset();
+    });
+
+    // const canvas = $('canvas');
+    // faceapi.matchDimensions(canvas, image);
+    // faceapi.draw.drawDetections(canvas, faceapi.resizeResults(detectResult, image))
+    
+    this.canvasFabric.requestRenderAll();
+
+    const resizeResults = faceapi.resizeResults(detectResult, image)
+    
+    const hatLength = $('hatsContainer').children.length;
+    resizeResults.forEach(({box}) => {
+      const defaultHatImg = $(`hat${Math.floor(Math.random() * hatLength)}`);
+      const { top, left, width, height } = box;
+      console.log(box);
+
+      const hat = new Hat(
+        defaultHatImg,
+        top,
+        left,
+        width,
+        height,
+      );
+
+      this.canvasFabric.add(hat);
+    });
+  }
 }
 
 class Hat {
-  constructor(hatImage, top, left, width, height, factorX, factorY) {
+  constructor(hatImage, top, left, width, height) {
     if (!hatImage || !top || !left) {
       return null;
     }
 
     const instance = new fabric.Image(hatImage, {
-      top,
-      left,
-      width: width || hatImage.naturalWidth,
-      height: height || hatImage.naturalHeight,
-      scaleX: factorX ? Math.max(factorX, 0.2) : 1,
-      scaleY: factorY ? Math.max(factorY, 0.2) : 1,
+      top: top - height * 0.6,
+      left: left - width * 0.25,
+      width: hatImage.naturalWidth,
+      height: hatImage.naturalHeight,
+      scaleX: 1,
+      scaleY: 1,
       centeredScaling: true,
       cornerColor: '#0b3a42',
       cornerStrokeColor: '#fff',
       cornerStyle: 'circle',
       transparentCorners: false,
-      rotatingPointOffset: 30,
+      rotatingPointOffset: 20,
     });
 
     instance.setControlsVisibility({
       bl: false,
+      mb: false,
+      mr: false,
       tr: false,
       tl: false,
       ml: false,
       mt: false,
     });
-
-    // instance.factor = factor;
+    
+    instance.scaleToWidth(width * 1.5, true);
 
     return instance;
   }

@@ -22,11 +22,13 @@
     "css-loader": "^3.4.0",
     "face-api.js": "^0.22.0",
     "file-loader": "^5.0.2",
+    "gh-pages": "^2.1.1",
     "style-loader": "^1.1.1",
     "webpack": "^4.41.4",
     "webpack-cli": "^3.3.10"
   },
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "deploy": "webpack && gh-pages -d public"
   }
 }

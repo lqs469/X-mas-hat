@@ -16,8 +16,6 @@ document.onreadystatechange = async function() {
 
   await faceapi.nets.ssdMobilenetv1.loadFromUri('./weights');
   $('overlay').style.display = 'none';
-
-  console.log(faceapi.nets.ssdMobilenetv1);
 };
 
 const $ = id => document.getElementById(id);

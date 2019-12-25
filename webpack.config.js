@@ -6,7 +6,7 @@ module.exports = {
   mode: 'production',
   entry: [
     './src/main.js',
-    './index.html',
+    './src/index.html',
   ],
   output: {
     path: path.resolve(__dirname, 'public'),

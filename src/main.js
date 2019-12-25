@@ -85,57 +85,6 @@ class Img {
     this.convertImg2Cvs(this.image);
   }
 
-  // detectFace() {
-  //   const { width, height } = this;
-  //   // const { width, height } = this.image;
-
-  //   // re-draw the image to clear previous results and get its RGBA pixel data
-  //   this.ctx.drawImage(this.image, 0, 0, width, height);
-  //   const rgba = this.ctx.getImageData(0, 0, width, height).data;
-  //   // prepare input to `run_cascade`
-  //   const imageObj = {
-  //     pixels: this.rgba_to_grayscale(rgba, width, height),
-  //     nrows: height,
-  //     ncols: width,
-  //     ldim: width,
-  //   };
-  //   const params = {
-  //     shiftfactor: 0.1, // move the detection window by 10% of its size
-  //     minsize: 20, // minimum size of a face (not suitable for real-time detection, set it to 100 in that case)
-  //     maxsize: 1000, // maximum size of a face
-  //     scalefactor: 1.1, // for multiscale processing: resize the detection window by 10% when moving to the higher scale
-  //   };
-  //   // run the cascade over the image
-  //   // dets is an array that contains (r, c, s, q) quadruplets
-  //   // (representing row, column, scale and detection score)
-  //   let dets = pico.run_cascade(imageObj, facefinder_classify_region, params);
-  //   // cluster the obtained detections
-  //   dets = pico.cluster_detections(dets, 0.2); // set IoU threshold to 0.2
-  //   console.log(dets);
-  //   // draw results
-  //   const qthresh = 5.0; // this constant is empirical: other cascades might require a different one
-  //   this.detectResult = dets.filter(det => det[3] > qthresh);
-  //   // for (let i = 0; i < dets.length; ++i)
-  //   //     // check the detection score
-  //   //     // if it's above the threshold, draw it
-  //   //     if (dets[i][3] > qthresh) {
-  //   //         ctx.beginPath();
-  //   //         ctx.arc(
-  //   //             dets[i][1],
-  //   //             dets[i][0],
-  //   //             dets[i][2] / 2,
-  //   //             0,
-  //   //             2 * Math.PI,
-  //   //             false
-  //   //         );
-  //   //         ctx.lineWidth = 3;
-  //   //         ctx.strokeStyle = 'red';
-  //   //         ctx.stroke();
-  //   //     }
-
-  //   // return next => next(img);
-  // }
-
   rgba_to_grayscale(rgba, nrows, ncols) {
     const gray = new Uint8Array(nrows * ncols);
     for (let r = 0; r < nrows; ++r)
@@ -149,13 +98,12 @@ class Img {
     return gray;
   }
 
-  convertImg2Cvs(image) {
-    console.log('convertImg2Cvs');
-    const { width, height, detectResult } = this;
+  convertImg2Cvs() {
+    const { cvs, image, width, height, detectResult } = this;
     this.canvasFabric && this.canvasFabric.dispose();
 
     const { naturalWidth, naturalHeight } = image;
-    this.canvasFabric = new fabric.Canvas(this.cvs, {
+    this.canvasFabric = new fabric.Canvas(cvs, {
       width,
       height,
       backgroundImage: new fabric.Image(image, {
@@ -184,14 +132,13 @@ class Img {
     
     this.canvasFabric.requestRenderAll();
 
+    // faceapi.matchDimensions(cvs, image);
+    // faceapi.draw.drawDetections(
+    //   cvs,
+    //   faceapi.resizeResults(detectResult, image),
+    // );
 
-    faceapi.matchDimensions(this.cvs, this.image);
-    faceapi.draw.drawDetections(
-      this.cvs,
-      faceapi.resizeResults(this.detectResult, this.image),
-    );
-
-    const resizeResults = faceapi.resizeResults(this.detectResult, this.image)
+    const resizeResults = faceapi.resizeResults(detectResult, image)
     
     const hatLength = $('hatsContainer').children.length;
     resizeResults.forEach(({box}) => {
@@ -210,6 +157,7 @@ class Img {
         factorX,
         factorY,
       );
+
       this.canvasFabric.add(hat);
     });
   }
@@ -220,7 +168,6 @@ class Img {
       clickHat,
       height / 2 - 25,
       width / 2 - 25,
-      1
     );
 
     if (hat) {
@@ -323,8 +270,8 @@ class Hat {
       left,
       width: width || hatImage.naturalWidth,
       height: height || hatImage.naturalHeight,
-      scaleX: factorX || 1,
-      scaleY: factorY || 1,
+      scaleX: factorX ? Math.max(factorX, 0.2) : 1,
+      scaleY: factorY ? Math.max(factorY, 0.2) : 1,
       centeredScaling: true,
       cornerColor: '#0b3a42',
       cornerStrokeColor: '#fff',

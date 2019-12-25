@@ -1,6 +1,26 @@
-const $ = id => document.getElementById(id);
+import * as faceapi from 'face-api.js';
+import './style.css';
 
-let canvasFabric = null;
+document.onreadystatechange = async function() {
+  if (document.readyState === 'complete') {
+    const hatsContainer = $('hatsContainer');
+    for(let i = 20; i >= 0; i--) {
+      let img = document.createElement('img');
+      const source = require(`./img/hat${i}.png`).default;
+      img.src = `dist/${source}`;
+      img.id = `hat${i}`;
+      img.class = 'hat-item';
+      hatsContainer.appendChild(img);
+    }
+  }
+
+  await faceapi.nets.ssdMobilenetv1.loadFromUri('/weights');
+  $('overlay').style.display = 'none';
+
+  console.log(faceapi.nets.ssdMobilenetv1);
+};
+
+const $ = id => document.getElementById(id);
 
 class Img {
   constructor() {
@@ -29,6 +49,7 @@ class Img {
   }
 
   init(file, buffer) {
+    $('overlay').style.display = 'flex';
     if (!this.vaildExtension(file)) {
       alert('请上传图片格式的文件');
       return;
@@ -57,60 +78,65 @@ class Img {
       this.cvs.height = height;
 
       this.detectFace();
-      this.convertImg2Cvs(this.image);
     };
   }
 
-  detectFace() {
-    const { width, height } = this;
-    // const { width, height } = this.image;
-
-    // re-draw the image to clear previous results and get its RGBA pixel data
-    this.ctx.drawImage(this.image, 0, 0, width, height);
-    const rgba = this.ctx.getImageData(0, 0, width, height).data;
-    // prepare input to `run_cascade`
-    const imageObj = {
-      pixels: this.rgba_to_grayscale(rgba, width, height),
-      nrows: height,
-      ncols: width,
-      ldim: width,
-    };
-    const params = {
-      shiftfactor: 0.1, // move the detection window by 10% of its size
-      minsize: 20, // minimum size of a face (not suitable for real-time detection, set it to 100 in that case)
-      maxsize: 1000, // maximum size of a face
-      scalefactor: 1.1, // for multiscale processing: resize the detection window by 10% when moving to the higher scale
-    };
-    // run the cascade over the image
-    // dets is an array that contains (r, c, s, q) quadruplets
-    // (representing row, column, scale and detection score)
-    let dets = pico.run_cascade(imageObj, facefinder_classify_region, params);
-    // cluster the obtained detections
-    dets = pico.cluster_detections(dets, 0.2); // set IoU threshold to 0.2
-    console.log(dets);
-    // draw results
-    const qthresh = 5.0; // this constant is empirical: other cascades might require a different one
-    this.detectResult = dets.filter(det => det[3] > qthresh);
-    // for (let i = 0; i < dets.length; ++i)
-    //     // check the detection score
-    //     // if it's above the threshold, draw it
-    //     if (dets[i][3] > qthresh) {
-    //         ctx.beginPath();
-    //         ctx.arc(
-    //             dets[i][1],
-    //             dets[i][0],
-    //             dets[i][2] / 2,
-    //             0,
-    //             2 * Math.PI,
-    //             false
-    //         );
-    //         ctx.lineWidth = 3;
-    //         ctx.strokeStyle = 'red';
-    //         ctx.stroke();
-    //     }
-
-    // return next => next(img);
+  async detectFace() {
+    this.detectResult = await faceapi.detectAllFaces(this.image);
+    $('overlay').style.display = 'none';
+    this.convertImg2Cvs(this.image);
   }
+
+  // detectFace() {
+  //   const { width, height } = this;
+  //   // const { width, height } = this.image;
+
+  //   // re-draw the image to clear previous results and get its RGBA pixel data
+  //   this.ctx.drawImage(this.image, 0, 0, width, height);
+  //   const rgba = this.ctx.getImageData(0, 0, width, height).data;
+  //   // prepare input to `run_cascade`
+  //   const imageObj = {
+  //     pixels: this.rgba_to_grayscale(rgba, width, height),
+  //     nrows: height,
+  //     ncols: width,
+  //     ldim: width,
+  //   };
+  //   const params = {
+  //     shiftfactor: 0.1, // move the detection window by 10% of its size
+  //     minsize: 20, // minimum size of a face (not suitable for real-time detection, set it to 100 in that case)
+  //     maxsize: 1000, // maximum size of a face
+  //     scalefactor: 1.1, // for multiscale processing: resize the detection window by 10% when moving to the higher scale
+  //   };
+  //   // run the cascade over the image
+  //   // dets is an array that contains (r, c, s, q) quadruplets
+  //   // (representing row, column, scale and detection score)
+  //   let dets = pico.run_cascade(imageObj, facefinder_classify_region, params);
+  //   // cluster the obtained detections
+  //   dets = pico.cluster_detections(dets, 0.2); // set IoU threshold to 0.2
+  //   console.log(dets);
+  //   // draw results
+  //   const qthresh = 5.0; // this constant is empirical: other cascades might require a different one
+  //   this.detectResult = dets.filter(det => det[3] > qthresh);
+  //   // for (let i = 0; i < dets.length; ++i)
+  //   //     // check the detection score
+  //   //     // if it's above the threshold, draw it
+  //   //     if (dets[i][3] > qthresh) {
+  //   //         ctx.beginPath();
+  //   //         ctx.arc(
+  //   //             dets[i][1],
+  //   //             dets[i][0],
+  //   //             dets[i][2] / 2,
+  //   //             0,
+  //   //             2 * Math.PI,
+  //   //             false
+  //   //         );
+  //   //         ctx.lineWidth = 3;
+  //   //         ctx.strokeStyle = 'red';
+  //   //         ctx.stroke();
+  //   //     }
+
+  //   // return next => next(img);
+  // }
 
   rgba_to_grayscale(rgba, nrows, ncols) {
     const gray = new Uint8Array(nrows * ncols);
@@ -126,6 +152,7 @@ class Img {
   }
 
   convertImg2Cvs(image) {
+    console.log('convertImg2Cvs');
     const { width, height, detectResult } = this;
     this.canvasFabric && this.canvasFabric.dispose();
 
@@ -153,21 +180,40 @@ class Img {
 
     this.canvasFabric.on('after:render', function() {
       console.log('rendered');
-      this.calcOffset();
+      // this.calcOffset();
     });
 
-    const hatLength = $('hatsContainer').children.length;
-    detectResult.forEach(det => {
-      const defaultHatImg = $(`hat${Math.floor(Math.random() * hatLength)}`);
-      const factor = det[2] / defaultHatImg.width;
-      const top = det[0] - defaultHatImg.height * factor;
-      const left = det[1] - (defaultHatImg.width * factor) / 2;
+    
+    this.canvasFabric.requestRenderAll();
 
-      const hat = new Hat(defaultHatImg, top, left, factor);
+
+    faceapi.matchDimensions(this.cvs, this.image);
+    faceapi.draw.drawDetections(
+      this.cvs,
+      faceapi.resizeResults(this.detectResult, this.image),
+    );
+
+    const resizeResults = faceapi.resizeResults(this.detectResult, this.image)
+    
+    const hatLength = $('hatsContainer').children.length;
+    resizeResults.forEach(({box}) => {
+      const defaultHatImg = $(`hat${Math.floor(Math.random() * hatLength)}`);
+      const { top, left, width, height } = box;
+      const factorX = (width + 20) / defaultHatImg.width;
+      const factorY = height / defaultHatImg.height;
+      console.log(box);
+
+      const hat = new Hat(
+        defaultHatImg,
+        top - height * 0.75,
+        left - 10,
+        width + 20,
+        height,
+        factorX,
+        factorY,
+      );
       this.canvasFabric.add(hat);
     });
-
-    this.canvasFabric.requestRenderAll();
   }
 
   addHat(clickHat) {
@@ -269,7 +315,7 @@ class Img {
 }
 
 class Hat {
-  constructor(hatImage, top, left, factor = 1) {
+  constructor(hatImage, top, left, width, height, factorX, factorY) {
     if (!hatImage || !top || !left) {
       return null;
     }
@@ -277,10 +323,10 @@ class Hat {
     const instance = new fabric.Image(hatImage, {
       top,
       left,
-      width: hatImage.naturalWidth,
-      height: hatImage.naturalHeight,
-      scaleX: factor,
-      scaleY: factor,
+      width: width || hatImage.naturalWidth,
+      height: height || hatImage.naturalHeight,
+      scaleX: factorX || 1,
+      scaleY: factorY || 1,
       centeredScaling: true,
       cornerColor: '#0b3a42',
       cornerStrokeColor: '#fff',
@@ -297,7 +343,7 @@ class Hat {
       mt: false,
     });
 
-    instance.factor = factor;
+    // instance.factor = factor;
 
     return instance;
   }
@@ -338,28 +384,15 @@ $('exportBtn').addEventListener('click', () => {
   img.export();
 });
 
-let facefinder_classify_region = (r, c, s, pixels, ldim) => -1.0;
+// let facefinder_classify_region = (r, c, s, pixels, ldim) => -1.0;
 
-const cascadeurl = 'lib/facefinder.js';
+// const cascadeurl = 'lib/facefinder.js';
 
-fetch(cascadeurl).then(response => {
-  response.arrayBuffer().then(buffer => {
-    const bytes = new Int8Array(buffer);
-    facefinder_classify_region = pico.unpack_cascade(bytes);
-    console.log('* cascade loaded');
-    $('overlay').style.display = 'none';
-  });
-});
-
-document.onreadystatechange = function() {
-  if (document.readyState === 'complete') {
-    const hatsContainer = $('hatsContainer')
-    for(let i = 20; i >= 0; i--) {
-      let img = document.createElement('img');
-      img.src = `img/hat${i}.png`;
-      img.id = `hat${i}`;
-      img.class = 'hat-item';
-      hatsContainer.appendChild(img);
-    }
-  }
-};
+// fetch(cascadeurl).then(response => {
+//   response.arrayBuffer().then(buffer => {
+//     const bytes = new Int8Array(buffer);
+//     facefinder_classify_region = pico.unpack_cascade(bytes);
+//     console.log('* cascade loaded');
+//     $('overlay').style.display = 'none';
+//   });
+// });

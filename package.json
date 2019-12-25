@@ -2,7 +2,6 @@
   "name": "santa-cap",
   "description": "[Have Fun.](https://lqs469.github.io/X-mas-hat/index_en.html)",
   "version": "1.0.0",
-  "main": "main.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/lqs469/X-mas-hat.git"
@@ -16,5 +15,17 @@
   "bugs": {
     "url": "https://github.com/lqs469/X-mas-hat/issues"
   },
-  "homepage": "https://github.com/lqs469/X-mas-hat#readme"
+  "homepage": "https://github.com/lqs469/X-mas-hat#readme",
+  "dependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^3.4.0",
+    "face-api.js": "^0.22.0",
+    "file-loader": "^5.0.2",
+    "style-loader": "^1.1.1",
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10"
+  },
+  "scripts": {
+    "build": "webpack"
+  }
 }

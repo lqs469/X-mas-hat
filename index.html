@@ -4,45 +4,38 @@
   <meta charset='UTF-8'>
   <meta name='viewport' content='width=device-width,maximum-scale=1.0,minimum-scale=1.0'>
   <meta http-equiv='X-UA-Compatible' content='ie=edge'>
-  <title>🎅Santa Cap</title>
-  <link rel="stylesheet" type="text/css" href='./dist/style.css'>
-  <script src='./lib/pico.min.js'></script>
+  <title>🎄SantaHat🎄</title>
+  <meta name="description" content="Santa Hat by face detection,通过人脸识别戴上圣诞帽">
   <script src="https://cdn.bootcss.com/fabric.js/2.0.0-rc.3/fabric.min.js"></script>
 </head>
 <body>
   <div id='header' class='header'>
-    <h1>Santa Cap</h1>
+    <h1>🎄Santa Hat🎄</h1>
   </div>
 
   <div class='upload-container' id='uploadContainer'>
     <input id='upload' class='upload-input' type='file'>
-    <div class='santa'>🎅🏻</div>
-    <svg viewPort="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" height='80px' width='80px'>
-      <line x1="0" y1="40" x2="80" y2="40" stroke="black" stroke-width="1"/>
-      <line x1="40" y1="0" x2="40" y2="80" stroke="black" stroke-width="1"/>
-    </svg>
+    <div class='santa'>Upload 上传图片</div>
   </div>
-
-  <img id='export' alt='圣诞快乐' src='' />
+  
+  <img id='export' alt='圣诞快乐' src=''></img>
   <canvas id='cvs'></canvas>
 
   <p id='tip'></p>
 
-  <div id='hatsContainer' class='hats-container'>
-  </div>
+  <div id='hatsContainer' class='hats-container'></div>
+
   <div class='footer hide' id='footer'>
-    <!-- <button id='addHat'>加一顶</button> -->
-    <button id='exportBtn' style=''>完成 Export</button>
+    <button id='exportBtn' style=''>导出 Export</button>
     <button id='reuploadImg'>重选 Reload</button>
     <button class='hide' id='delete' style='color: #ff404a; border-color: #ff404a'>删除 Remove</button>
   </div>
 
+  
   <label class='bottom'> 💻  with ❤️  by <a href='https://github.com/lqs469/X-mas-hat'>lqs469</a></label>
-  <script src='./dist/main.min.122204.js'></script>
-  <!-- <script src='./src/main.js'></script> -->
-
   <div id='overlay'>Loading...</div>
-
+  
+  <script src='./dist/bundle.js'></script>
   <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1264607064'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1264607064%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
 </body>
 </html>
